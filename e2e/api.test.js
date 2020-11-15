@@ -14,15 +14,36 @@ describe('API Suite test', () => {
             deepStrictEqual(response.text, 'contact us page')
         })
     })
-
-    describe('/hello', () => {
-
+ 
+    describe('/hello', () => { 
+ 
         it('should request an inexistent rount /hi and redirect to /hello', async () => {
             const response = await request(app)
                                     .get('/hi')
                                     .expect(200)
                                     
             deepStrictEqual(response.text, 'Hello World!')
+        })
+    })
+
+    describe('/login', () => { 
+ 
+        it('should login successfully on the login round and return HTTP Status 200', async () => {
+            const response = await request(app)
+                                    .post('/login')
+                                    .send({ username: 'Vagner', password: '1234'})
+                                    .expect(200)
+                                    
+            deepStrictEqual(response.text, 'Logging has succeeded!')
+        })
+
+        it('should unauthorize a request when requesting it using wrong credentials and return HTTP Status 401', async () => {
+            const response = await request(app)
+                                    .post('/login')
+                                    .send({ username: 'asdas', password: '1234'})
+                                    .expect(401)
+                                    
+            deepStrictEqual(response.text, 'Logging failed')
         })
     })
 })

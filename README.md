@@ -3,7 +3,16 @@ Curso Erick Wendell mocks, stubs, spies, e2e, tdd, bdd
 
 
 # mocks
-    node index.test.js
+``` 
+cd mocks/
+node index.test.js
+``` 
 
+# stubs
+``` 
+cd stubs/src
+node index.test.js
+
+``` 
 
 

@@ -1,0 +1,23 @@
+[
+    {
+        "id": "482a4b69-8048-4221-b39e-da3850330bd0",
+        "name": "Spyder",
+        "releaseYear": 2020,
+        "available": true,
+        "gasAvailable": true
+    },
+    {
+        "id": "b732411c-5fc1-405e-ac02-606fefb93df6",
+        "name": "Model 3",
+        "releaseYear": 2020,
+        "available": true,
+        "gasAvailable": true
+    },
+    {
+        "id": "840f7780-f352-42f4-9bc4-2df28fdede35",
+        "name": "Golf",
+        "releaseYear": 2020,
+        "available": true,
+        "gasAvailable": true
+    }
+]

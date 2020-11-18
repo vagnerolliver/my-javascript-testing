@@ -1,5 +1,6 @@
 const { describe, it, before, beforeEach, afterEach } = require('mocha')
 const CarService = require('../../src/services/carService')
+const Transaction = require('../../src/entities/transaction')
 const { join } = require('path') 
 const { expect } = require('chai')
 const sinon = require('sinon')
@@ -81,7 +82,7 @@ describe('CarService Suite Tests', () => {
         expect(result).to.be.deep.equal(expected) 
     })
 
-    it('given a carCategory, custumer and numberOfDay is should calculate final amount in real', async () =>{
+    it('given a carCategory, custumer and numberOfDay it should calculate final amount in real', async () =>{
         const custumer = Object.create(mocks.validCustomer)
         custumer.age = 50
 
@@ -105,4 +106,39 @@ describe('CarService Suite Tests', () => {
 
         expect(result).to.be.deep.equal(expected)
      })
-})
+
+    it('given a customer and a carCategory it should return a transaction receipt', async () => {
+        const car = mocks.validCar
+        const carCategory = { 
+            ...mocks.validCarCategory,
+            price: 37.6,
+            carIds: [car.id]
+        } 
+        const customer = Object.create(mocks.validCustomer)
+        customer.age = 20
+
+        const numberOfDays = 5
+        const dueDate = '10 de novembro de 2020'
+
+        const now = new Date(2020, 10, 5)
+        sandbox.useFakeTimers(now.getTime())
+
+        sandbox.stub(
+            carService.carRepository,
+            carService.carRepository.find.name
+        ).resolves(car)
+
+        // age 20 - tax 1.1 - categoryPrice 37.6
+        // 37.6 * 1.1. = 41.36 * 5 days = 206.8
+        const expectedAmount = carService.currencyFormat.format(206.80)
+        const result = await carService.rent(customer, carCategory, numberOfDays)
+        const expected = new Transaction({
+            customer,
+            car,
+            dueDate,
+            amount: expectedAmount
+        })
+        
+        expect(result).to.be.deep.equal(expected)
+    })
+ })

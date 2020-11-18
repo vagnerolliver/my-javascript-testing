@@ -1,5 +1,5 @@
 const { describe, it, before, beforeEach, afterEach } = require('mocha')
-const CarService = require('./../../services/carService')
+const CarService = require('./../../src/services/carService')
 const { join } = require('path') 
 const { expect } = require('chai')
 const sinon = require('sinon')

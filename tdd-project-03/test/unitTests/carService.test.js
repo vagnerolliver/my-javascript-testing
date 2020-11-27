@@ -3,7 +3,7 @@ const CarService = require('../../src/services/carService')
 const Transaction = require('../../src/entities/transaction')
 const { join } = require('path') 
 const { expect } = require('chai')
-const sinon = require('sinon')
+const sinon = require('sinon') 
  
 const carsDatabase = join(__dirname, './../../database', 'cars.json')
 

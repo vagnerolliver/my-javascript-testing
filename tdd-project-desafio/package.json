@@ -7,9 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npx mocha -w --parallel **/**/*.test.js",
-    "test:cov": "npx nyc npx mocha --parallel **/**/*.test.js",
-    "seed": "node ./seed",
+    "test": "NODE_ENV=test npx mocha -w --parallel **/**/*.test.js",
+    "test:cov": "NODE_ENV=test npx nyc npx mocha --parallel **/**/*.test.js",
+    "seed": "NODE_ENV=test node ./seed",
     "start": "node ./src/api"
   },
   "keywords": [],

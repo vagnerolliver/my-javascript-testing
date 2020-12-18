@@ -8,9 +8,9 @@ const sinon = require('sinon')
 const carsDatabase = join(__dirname, './../../database', 'cars.json')
 
 const mocks = {
-    validCarCategory: require('./../mocks/valid-carCategory.json'),
-    validCar: require('./../mocks/valid-car.json'),
-    validCustomer: require('./../mocks/valid-customer.json')
+    validCarCategory: require('../mocks/valid-carCategory.json'),
+    validCar: require('../mocks/valid-car.json'),
+    validCustomer: require('../mocks/valid-customer.json')
 }
 
 describe('CarService Suite Tests', () => {

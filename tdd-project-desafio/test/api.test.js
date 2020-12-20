@@ -5,6 +5,7 @@ const request = require('supertest')
 const Api = require('../src/api')
 const CarService = require('../src/services/carService')
 const SERVER_TEST_PORT = 4000
+const { join } = require('path')
 
 const mocks = {
     validCar: require('./mocks/valid-car.json'),
@@ -24,8 +25,11 @@ describe('API Suite test', () => {
     })
 
     before(() => {
+        const carsDatabase = join(__dirname, './../database', 'cars.json')
+        // const carsDatabase = './../database/cars.json'
+
         const carService = new CarService({ 
-            cars: './../../database/cars.json'
+            cars: carsDatabase
         })        
         const instance = Api(carService)
 
@@ -63,15 +67,88 @@ describe('API Suite test', () => {
         })
     })
 
-    describe('/rent:post', () => {
-        it('given a carCategory, custumer and numberOfDay it should calculate final amount in real', async () =>{
-        
+    describe('/calculateFinalPrice:post', () => {
+        it('given a carCategory, customer and numberOfDay it should calculate final amount in real', async () =>{
+            const customer = {
+                ...mocks.validCustomer,
+                age: 50
+            } 
+
+            const carCategory = {
+                ...mocks.validCarCategory,
+                price: 37.6,
+            } 
+
+            const numberOfDays = 5
+
+            const body = {
+                customer,
+                carCategory,
+                numberOfDays
+            }
+
+            const expected =  {
+                result: app.instance.carService.currencyFormat.format(244.4)
+            }
+
+            const response = await request(app.server)
+                .post('/calculateFinalPrice')
+                .send(body)
+                .expect(200)
+            
+            expect(response.body).to.be.deep.equal(expected)
         })
     })
 
-    describe('/calculateFinalPrice:post', () => {
+    describe('/rent:post', () => {
         it('given a customer and a carCategory it should return a transaction receipt', async () => {
-        
+            const customer = {
+                ...mocks.validCustomer,
+                age: 50
+            } 
+
+            const car = mocks.validCar
+            const carCategory = {
+                ...mocks.validCarCategory,
+                price: 37.6,
+                carIds: [car.id]
+            } 
+   
+            const numberOfDays = 5
+
+            const body = {
+                customer,
+                carCategory,
+                numberOfDays
+            }
+
+            const dueDate = "10 de novembro de 2020"
+            
+            const now = new Date(2020, 10, 5)
+            sandbox.useFakeTimers(now.getTime())
+
+            sandbox.stub(
+                app.instance.carService.carRepository,
+                app.instance.carService.carRepository.find.name, 
+            ).resolves(car)
+
+            const expected =  {
+                result: { 
+                    customer,
+                    car,
+                    // Then the final formula will be `((price per day * Tax) * number of days)`  
+                    // And the final result will be `((37.6 * 1.3) * 5)= 244.4`  
+                    amount: app.instance.carService.currencyFormat.format(244.4),
+                    dueDate
+                }
+            }
+
+            const response = await request(app.server)
+                .post('/rent')
+                .send(body)
+                .expect(200)
+
+            expect(response.body).to.be.deep.equal(expected)
         })
     })
 
@@ -87,7 +164,7 @@ describe('API Suite test', () => {
             const response = await request(app.server)
                         .get('/cars')
                         .expect(200)
-                      
+                        
             const expected = car
             expect(JSON.stringify(response.body)).to.be.deep.equal(JSON.stringify(expected))
         })

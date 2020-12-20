@@ -44,6 +44,54 @@ class Api {
                 
                 return response.end()
             },
+
+            '/calculateFinalPrice:post': async (request, response) => {
+
+                try {
+                    for await (const data of request) {
+                        const { customer, carCategory, numberOfDays} = JSON.parse(data)
+                         // alguma validacao top aqui
+ 
+                        const result = await this.carService.calculateFinalPrice(customer, carCategory, numberOfDays)
+                    
+                        response.writeHead(200, DEFAULT_HEADERS)
+    
+                        response.write(JSON.stringify({ result }))
+                        response.end()
+                    } 
+                } catch (error) {
+                    console.log('error', error)
+                    response.writeHead(500, DEFAULT_HEADERS)
+                    response.write(JSON.stringify({ error: 'Deu Ruim!' }))
+                    response.end()
+                }
+                
+                return response.end()
+            },
+
+            '/rent:post': async (request, response) => {
+
+                try {
+                    for await (const data of request) {
+                        const { customer, carCategory, numberOfDays} = JSON.parse(data)
+                         // alguma validacao top aqui
+ 
+                        const result = await this.carService.rent(customer, carCategory, numberOfDays)
+                    
+                        response.writeHead(200, DEFAULT_HEADERS)
+    
+                        response.write(JSON.stringify({ result }))
+                        response.end()
+                    } 
+                } catch (error) {
+                    console.log('error', error)
+                    response.writeHead(500, DEFAULT_HEADERS)
+                    response.write(JSON.stringify({ error: 'Deu Ruim!' }))
+                    response.end()
+                }
+                
+                return response.end()
+            },
         
             default: (request, response) => {
                 response.write(JSON.stringify({ text: 'Hello World!' }))

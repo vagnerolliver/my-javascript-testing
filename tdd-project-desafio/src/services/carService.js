@@ -31,8 +31,8 @@ class CarService {
         return car
     }
 
-    calculateFinalPrice(custumer, carCategory, numberOfDays) {
-        const { age } = custumer
+    calculateFinalPrice(customer, carCategory, numberOfDays) {
+        const { age } = customer
         const price = carCategory.price
         const { then: tax } = this.taxesBasedOnAge
             .find(tax => age >= tax.from && age <= tax.to)
